@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.notNullValue;
         properties = { "spring.config.additional-location=classpath:integration-test.yml"})
 @Testcontainers
 public class AnimalDataBaseTest {
+
     @Container
     private static PostgreSQLContainer database = new PostgreSQLContainer("postgres:13.2");
 
@@ -27,19 +28,19 @@ public class AnimalDataBaseTest {
     private AnimalRepository animalRepository;
 
     @Test
-    public void createAnimal() {
-        var animal = new AnimalDao("Hela", "Mestizo", "Female", true);
-        var animalDb = animalRepository.save(animal);
+    public void createAnimal(){
+        var animal = new AnimalDao("Hela","Mestizo","female",true);
+        var animalDB = animalRepository.save(animal);
 
-        assertThat(animalDb, notNullValue());
-        assertThat(animalDb.getName(), equalTo("Hela"));
-        assertThat(animalDb.getBreed(), equalTo("Mestizo"));
-        assertThat(animalDb.getGender(), equalTo("Female"));
-        assertThat(animalDb.isVaccinated(), equalTo(true));
+        assertThat(animalDB, notNullValue());
+        assertThat(animalDB.getName(), equalTo("Hela"));
+        assertThat(animalDB.getBreed(), equalTo("Mestizo"));
+        assertThat(animalDB.getGender(), equalTo("female"));
+        assertThat(animalDB.isVaccinated(), equalTo(true));
     }
 
     @DynamicPropertySource
-    static void databaseProperties(DynamicPropertyRegistry registry) {
+    static void databaseProperties(DynamicPropertyRegistry registry){
         registry.add("spring.datasource.url", database::getJdbcUrl);
         registry.add("spring.datasource.username", database::getUsername);
         registry.add("spring.datasource.password", database::getPassword);

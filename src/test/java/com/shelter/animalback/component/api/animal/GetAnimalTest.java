@@ -61,3 +61,4 @@ public class GetAnimalTest {
         assertThat(animal.getGender(), equalTo("Male"));
         assertThat(animal.isVaccinated(), equalTo(false));
     }
+}
