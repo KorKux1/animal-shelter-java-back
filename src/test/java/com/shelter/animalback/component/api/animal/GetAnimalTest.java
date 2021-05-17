@@ -22,7 +22,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = { "spring.config.additional-location=classpath:component-test.yml"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
@@ -32,22 +33,20 @@ public class GetAnimalTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private AnimalRepository animalRepository;
+    AnimalRepository animalRepository;
 
     @BeforeEach
-    @SneakyThrows
     public void setUp() {
-
         var cat = new AnimalDao("Thor", "Birmano", "Male", false);
         animalRepository.save(cat);
     }
 
     @Test
     @SneakyThrows
-    public void animalDetailWithSuccessStatusCodeAndContentType() {
+    public void animaDetailWithSuccessStatusCodeAndContentType() {
         var response = mockMvc.perform(get("/animals/Thor")).andReturn().getResponse();
 
-        assertThat(response.getStatus(),equalTo(HttpStatus.OK.value()));
+        assertThat(response.getStatus(), equalTo(HttpStatus.OK.value()));
         assertThat(response.getContentType(), equalTo(MediaType.APPLICATION_JSON.toString()));
     }
 
@@ -62,4 +61,3 @@ public class GetAnimalTest {
         assertThat(animal.getGender(), equalTo("Male"));
         assertThat(animal.isVaccinated(), equalTo(false));
     }
-}

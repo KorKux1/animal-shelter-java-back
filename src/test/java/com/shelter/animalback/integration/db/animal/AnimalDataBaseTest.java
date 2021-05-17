@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -27,20 +28,20 @@ public class AnimalDataBaseTest {
 
     @Test
     public void createAnimal() {
-        var animal = new AnimalDao("Hela","Mestiza","Female",true);
-        var animalDb= animalRepository.save(animal);
+        var animal = new AnimalDao("Hela", "Mestizo", "Female", true);
+        var animalDb = animalRepository.save(animal);
 
+        assertThat(animalDb, notNullValue());
         assertThat(animalDb.getName(), equalTo("Hela"));
-        assertThat(animalDb.getBreed(), equalTo("Mestiza"));
+        assertThat(animalDb.getBreed(), equalTo("Mestizo"));
         assertThat(animalDb.getGender(), equalTo("Female"));
         assertThat(animalDb.isVaccinated(), equalTo(true));
     }
 
     @DynamicPropertySource
     static void databaseProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url",database::getJdbcUrl);
-        registry.add("spring.datasource.username",database::getUsername);
-        registry.add("spring.datasource.password",database::getPassword);
+        registry.add("spring.datasource.url", database::getJdbcUrl);
+        registry.add("spring.datasource.username", database::getUsername);
+        registry.add("spring.datasource.password", database::getPassword);
     }
-
 }

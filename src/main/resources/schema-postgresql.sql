@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS animal
     id bigint PRIMARY KEY,
     breed VARCHAR(255),
     gender VARCHAR(255),
-    name VARCHAR(255),
+    name VARCHAR(10),
     vaccinated boolean NOT NULL,
     UNIQUE(name)
     );

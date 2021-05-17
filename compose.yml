@@ -7,9 +7,11 @@ services:
       POSTGRES_PASSWORD: "123456"
     ports:
       - "15432:5432"
+    # volumes:
+    #   - /home/xxx/<path>:/var/lib/postgresql/data
     networks:
       - postgres-compose-network
-      
+
   teste-pgadmin-compose:
     image: dpage/pgadmin4
     environment:
@@ -22,6 +24,6 @@ services:
     networks:
       - postgres-compose-network
 
-networks: 
+networks:
   postgres-compose-network:
     driver: bridge

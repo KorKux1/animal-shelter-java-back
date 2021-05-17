@@ -1,5 +1,5 @@
-
 package com.shelter.animalback.component.api.animal;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shelter.animalback.repository.AnimalRepository;
@@ -17,6 +17,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -24,25 +26,25 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = { "spring.config.additional-location=classpath:component-test.yml"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 public class SaveAnimalTest {
-
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private AnimalRepository animalRepository;
+    AnimalRepository animalRepository;
 
     @Test
     @SneakyThrows
     public void createAnimalSuccessful() {
         var animal = new CreateAnimalRequestBody();
-        animal.setBreed("Mestiza");
+        animal.setName("Princesa");
+        animal.setBreed("Mestizo");
         animal.setGender("Female");
-        animal.setName("Hela");
         animal.setVaccinated(true);
 
         var createAnimalRequestBody = new ObjectMapper().writeValueAsString(animal);
@@ -55,28 +57,30 @@ public class SaveAnimalTest {
                 .getResponse();
 
         var animalResponse =
-                new ObjectMapper().readValue(response.getContentAsString(),CreateAnimalResponse.class);
-        //Asserts HTTP Response
-        assertThat(animalResponse.getName(), equalTo("Hela"));
-        assertThat(animalResponse.getBreed(), equalTo("Mestiza"));
+                new ObjectMapper().readValue(response.getContentAsString(), CreateAnimalResponse.class);
+
+        // Asserts Http Response
+        assertThat(animalResponse.getName(), equalTo("Princesa"));
+        assertThat(animalResponse.getBreed(), equalTo("Mestizo"));
         assertThat(animalResponse.getGender(), equalTo("Female"));
         assertThat(animalResponse.isVaccinated(), equalTo(true));
         assertThat(animalResponse.getId(), notNullValue());
-        //Database Asserts
+
+        // Database Asserts
         var dbQuery = animalRepository.findById(animalResponse.getId());
-        assertThat(dbQuery.isPresent(),is(true));
+        assertThat(dbQuery.isPresent(), is(true));
+
         var animalDB = dbQuery.get();
-        assertThat(animalDB.getName(), equalTo("Hela"));
-        assertThat(animalDB.getBreed(), equalTo("Mestiza"));
+        assertThat(animalDB.getName(), equalTo("Princesa"));
+        assertThat(animalDB.getBreed(), equalTo("Mestizo"));
         assertThat(animalDB.getGender(), equalTo("Female"));
         assertThat(animalDB.isVaccinated(), equalTo(true));
     }
 
-    //Carefully
     @Getter
     @Setter
     @NoArgsConstructor
-    private static class CreateAnimalRequestBody {
+    public class CreateAnimalRequestBody {
         private String name;
         private String breed;
         private String gender;
@@ -87,12 +91,11 @@ public class SaveAnimalTest {
     @Setter
     @NoArgsConstructor
     private static class CreateAnimalResponse {
-        private long id;
+        private Long id;
         private String name;
         private String breed;
         private String gender;
         private boolean vaccinated;
-        private String[] vaccines;
+        private List<String> vaccines;
     }
-
 }

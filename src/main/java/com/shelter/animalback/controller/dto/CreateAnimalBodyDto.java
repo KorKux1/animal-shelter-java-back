@@ -7,20 +7,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AnimalDto {
-    private long id;
+public class CreateAnimalBodyDto {
     private String name;
     private String breed;
     private String gender;
-    private boolean vaccinated;
+    private boolean isVaccinated;
     private String[] vaccines;
 
-    public AnimalDto(long id, String name, String breed, String gender, boolean vaccinated, String[] vaccines) {
-        this.id = id;
+    public CreateAnimalBodyDto(String name, String breed, String gender, boolean isVaccinated, String[] vaccines) {
         this.name = name;
         this.breed = breed;
         this.gender = gender;
-        this.vaccinated = vaccinated;
+        this.isVaccinated = isVaccinated;
         this.vaccines = vaccines;
     }
 }
